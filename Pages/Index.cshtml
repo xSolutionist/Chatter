@@ -1,0 +1,167 @@
+﻿@page
+@model IndexModel
+@using Microsoft.AspNetCore.Identity
+@using Chatter.Areas.Identity.Data
+@inject SignInManager<ChatterUser> SignInManager
+@inject UserManager<ChatterUser> UserManager
+@{
+    ViewData["Title"] = "Home page";
+    var user = await UserManager.GetUserAsync(User);
+
+}
+<!-- Buttons for Thread and Subthread -->
+<div class="text-center">
+    <img src="~/img/logo/logo_size.jpg" class="rounded-circle" />
+    <h6 class="text-white text-center font-weight-bold"> Discussion threads </h6>
+    @if (Model.Posts != null)
+    {
+        @foreach (var item in Model.Posts.Select(x => x.Thread).Distinct())
+        {
+            if (item == "PostReply")
+            {
+                continue;
+            }
+            <a href="?Thread=@item" class="btn  btn-outline-light"> <p class="font-weight-bold"> @item </p> </a>
+        }
+        <hr />
+        @if (Model.Thread != null)
+        {
+            @foreach (var item in Model.Posts.Where(x => x.Thread == Model.Thread).Select(x => x.Subthread).Distinct())
+            {
+                if (item == "PostReply")
+                {
+                    continue;
+                }
+                <button class="btn btn-outline-light">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus mr-2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <a class="text-light" href="?thread=@Model.Thread&subthread=@item"> <p class="font-weight-bold"> @item </p>  </a>
+                </button>
+            }
+        }
+    }
+</div>
+
+<!-- List posts according to Thread and Subthread -->
+<div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
+    @if (Model.Posts != null)
+    {
+        @foreach (var item in Model.Posts.Where(x => x.Thread == Model.Thread && x.Subthread == Model.SubThread))
+        {
+            if (item.Thread == "PostReply")
+            {
+                continue;
+            }
+
+            <div class="card mb-2">
+                <div class="card-body p-2 p-sm-3">
+                    <div class="media forum-item">
+                        <a href="#"><img src="/img/@item.UserImage" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                        <div class="media-body">
+                            <h6><a href="?MessageThread=@item.MessageThread" class="text-body">Post Discussion</a></h6>
+                            <p class="text-secondary">
+                                @item.Content
+                            </p>
+                            <p class="text-muted"><a href="javascript:void(0)"> @item.Author</a> replied <span class="text-secondary font-weight-bold">@item.Created </span></p>
+                            <a href="?thread=@item.Thread&subthread=@item.Subthread&EditId=@item.Id" class="btn btn-outline-dark"> Edit </a>
+                            <a href="?thread=@item.Thread&subthread=@item.Subthread&ReportId=@item.Id" class="btn btn-outline-dark"> Report </a>
+                            <!-- Report Posts -->
+                            @if (item.Id != 0 && item.Id == Model.ReportId)
+                            {
+                                <form method="post">
+                                    <label type="hidden" for="Content"> </label>
+                                    <input type="hidden" name="Content" value="@item.Content" />
+                                    <input type="hidden" value="@Model.ReportId" name="Id" />
+                                    <input type="submit" value="Sure you want to report?" class="btn btn-danger" />
+                                </form>
+                            }
+                        </div>
+                        <!-- Edit Own Posts -->
+                        @if (Model.EditId == item.Id)
+                        {
+                            @if (Model.Posts != null)
+                            {
+                                if (SignInManager.IsSignedIn(User))
+                                {
+                                    @foreach (var post in Model.Posts.Where(x => x.Id == Model.EditId && x.Author == Model.MyUser.ChatterName))
+                                    {
+                                        <div>
+                                            <form method="post">
+                                                <input type="hidden" value="@Model.EditId" name="Id" />
+                                                <label for="Content">Content</label><br />
+                                                <textarea name="Content" class="form-control" rows="9"> @item.Content </textarea>
+                                                <input type="submit" value="Edit Post" class="btn btn-success" />
+                                            </form>
+                                        </div>
+                                    }
+
+                                }
+
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+        }
+    }
+
+</div>
+<!-- List posts that are Replys -->
+@if (Model.MessageThread != 0)
+{
+    @foreach (var item in Model.Posts.Where(x => x.MessageThread == Model.MessageThread).OrderBy(x => x.Created))
+    {
+        <div class="card mb-2">
+            <div class="card-body p-2 p-sm-3">
+                <div class="media forum-item">
+                    <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="/img/@item.UserImage" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                    <div class="media-body">
+                        <h6><a href="?MessageThread=@item.MessageThread" class="text-body">Post Discussion</a></h6>
+                        <p class="text-secondary">
+                            @item.Content
+                        </p>
+                        <p class="text-muted"><a href="javascript:void(0)"> @item.Author</a> replied <span class="text-secondary font-weight-bold">@item.Created</span></p>
+                        <a href="?Messagethread=@item.MessageThread&EditId=@item.Id" class="btn btn-outline-dark"> Edit </a>
+                        <a href="?Messagethread=@item.MessageThread&ReportId=@item.Id" class="btn btn-outline-dark"> Report </a>
+                        @if (item.Id != 0 && item.Id == Model.ReportId)
+                        {
+                            <form method="post">
+                                <label type="hidden" for="Content"> </label>
+                                <input type="hidden" name="Content" value="@item.Content" />
+                                <input type="hidden" name="Thread" value="PostReply" />
+                                <input type="hidden" name="Subthread" value="PostReply" />
+                                <input type="hidden" value="@Model.ReportId" name="Id" />
+                                <input type="submit" value="Sure you want to report?" class="btn btn-danger" />
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+    <form method="post">
+        <input type="hidden" name="MessageThread" value="@Model.MessageThread" />
+        <input type="hidden" name="Thread" value="PostReply" />
+        <input type="hidden" name="Subthread" value="PostReply" />
+        <label for="Content">New Reply</label><br />
+        <textarea name="content" class="form-control" row="6"> </textarea> <br />
+        <input type="submit" class="btn btn-outline-light btn-block" value="+ Add Reply" />
+    </form>
+
+}
+<!-- Create Post under thread and subthread -->
+<div>
+    @if (Model.Thread != null && Model.SubThread != null && Model.ReportId == 0 && Model.EditId == 0 && Model.MessageThread == 0)
+    {
+        <form method="post">
+            <label for="Content">New Post</label><br />
+            <textarea name="content" class="form-control" row="6"> </textarea> <br />
+            <input type="submit" class="btn btn-outline-light btn-block" value="+ Add Post" />
+        </form>
+    }
+</div>

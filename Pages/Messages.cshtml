@@ -1,0 +1,68 @@
+﻿@page
+@model Chatter.Pages.MessagesModel
+@using Microsoft.AspNetCore.Identity
+@using Chatter.Areas.Identity.Data
+@inject SignInManager<ChatterUser> SignInManager
+@{
+    string[] seperatedUsers;
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <hr />
+    <h6 class="text-white text-center"> New Message </h6>
+    <div class="card text-center">
+        <hr />
+
+        <form method="post">
+            <label for="Recievinguser"> To </label>
+            <input name="Recievinguser" /> <br />
+
+            <label for="Comment">  </label>
+            <textarea name="Comment"  rows="3" cols="36">  </textarea> <br />
+
+            <input type="submit" class="btn btn-outline-dark btn-block" value="Send" />
+        </form>
+    </div>
+    <hr />
+}
+
+
+
+@if (Model.Messages != null)
+{
+    if (SignInManager.IsSignedIn(User))
+    {
+        <h6 class="text-white text-center"> Inbox </h6>
+        @foreach (var item in Model.Messages.Where(x => x.RecievingUser == Model.MyUser.ChatterName))
+        {
+            <div class="card mb-2">
+                <div class="card-body p-2 p-sm-3">
+                    <div class="media forum-item">
+                        <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="/img/@item.UserImage" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                        <div class="media-body">
+                            <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">Forum Post</a></h6>
+                            <p class="text-secondary">
+                                @item.Comment
+                            </p>
+                            <p class="text-muted"><a href="javascript:void(0)"> @item.SendingUser</a> replied <span class="text-secondary font-weight-bold">@item.Created</span></p>
+                        </div>
+                        <div class="text-muted small text-center align-self-center">
+                        </div>
+                            <a href="?DeleteId=@item.Id" class="btn btn-secondary"> Delete </a>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    }
+    else
+    {
+        <h4 class="text-white text-center"> Messages are a feature for registered chatter users  </h4>
+        <a href="https://localhost:44325/Identity/Account/Register" class="btn btn-outline-light btn-block"> Register </a>
+        <br />
+
+    }
+
+}

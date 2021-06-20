@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "mssql5": {
+      "type": "mssql",
+      "connectionId": "ChatterGroupMessageContext",
+      "suggestion": "true",
+      "ignored": "true"
+    },
+    "mssql4": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/azureisacdb/databases/ChatterMessageDb",
+      "type": "mssql.azure",
+      "connectionId": "ChatterMessageContext",
+      "secretStore": "AzureAppSettings"
+    },
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/azureisacdb/databases/ChatterUserDb",
+      "type": "mssql.azure",
+      "connectionId": "ChatterContextConnection",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

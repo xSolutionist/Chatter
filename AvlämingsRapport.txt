@@ -1,0 +1,71 @@
+﻿Chatter
+Avlämnings Rapport av Isac Hellström 2021/06/20 - Email isachells92@hotmail.com, Tel 0790 54 89 26
+
+Beskrivning av Chatter 
+Applikationens syfte är att möjliggöra kommunikation i form av ett forum, vars rubriker anges av 
+administratör. Användarna ska ha tillgång till en skräddarsydd profil.
+
+Tidsöversikt 
+Jag har utvecklat projektet under 4 veckor. Från 17-maj till 17-Augusti.
+
+Tekniska krav 
+Byggt på windows med .NET core 5. Går att vidareutveckla på alla plattformar.
+Server Struktur IIS, drivs av MSSQL databaser på Azure 
+Dependencies:
+Microsoft-AspNetCore.IdentityFrameworkCore 
+Microsoft.AspNetCore.identity.UI
+Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
+Microsoft.EntityFrameworkCore.Sqlite
+Microsoft.EntityframeworkCore.Sql.Server
+Microsoft.EntityFrameworkcore.Tools
+Microsoft.VisualStudio.Web.CodeGeneration.Design
+För att vidareutveckla applikationen rekommenderas en 4 kärnig processor som intel i3 / amd ryzen 3 och dylikt.
+För att använda applikationen krävs internetuppkoppling och en browser.
+
+Applications Struktur
+Programmerings Design: MVVM (Razor Pages)
+Via Startup.cs syns beroenden, de grundläggande är:
+Ett kall till Microsoft.Identity
+Ett kall till MSSQL azure databas via EntityFramework (Messages), DbContext.
+Ett interface som pratar med ChatterApi applikationen i form av REST anrop (Posts), Transient.
+Ett Konfigurations Block för Cookies, Settings.
+Transient: Class Random
+Transient: Class Stringbuilder
+
+Installation
+För att publicera till ett nytt domän krävs en publish from visual studio, därefter får det att konfigurera inställningar till nya domän och databaser.
+Innan dess behöver ett Admin sättas. Url/Admin sidan är inte tillgänglig för icke-administratörer.
+för att gå tillgång till dessa behövs kodrad 7 på Admin/Index.cs [Authorize(Role=”Admin”)] avkommenteras,
+därefter administratör rollen bli angiven. Därefter behöver kodraden åter-implementeras av säkerhets anledningar .
+Endpoints:
+/Api/Post - Get & Post.
+/Api/Post/{id} - Get & Put & Delete
+
+Funktionalitet
+Inloggning: Sker via Microsoft Identity, Modifierad med fält för användarnamn och profilbild.
+Anonym användare: Tillgång till att läsa poster, post-meddelanden.
+Registrerad användare: Tillgång till att läsa poster, post-meddelanden och privata meddelanden.
+Tillgång till funktionalitet att rapportera inlägg och att redigera användarens egna poster och meddelanden.
+Tillgång till konfiguration för profil och profilinformation som användarnamn och bilder.
+Administrativ användare: tillgång till allt som användare har och administrations sidan:
+Kunna see rapporterade inlägg och ta bort dem.
+Kunna Skapa nya kategorier och subkategorier.
+Kunna skapa nya roller eller befodra användare till administratör.
+Kunna hämta alla poster och meddelanden, med författare som Api i Json format.
+
+
+Brister
+I nuläget när en postmeddelande kopplas med en post skapas ett slumpmässigt nummer 1-99999.
+Med detta finns en chans att ett post meddelandets identitet trasslas in med ett annat. Detta går att justera om man injicerar en Guid istället för en random.
+Förbättringsförslag 
+Funktionalitet kan läggas till som adderar användarvänlighet för poster. tex:
+En Like knapp vore passande.
+Ett kall som hämtar de senaste 5 posterna i en kategori när den klickas på.
+En Lista på alla meddelanden som en användare har postat.
+Funktionalitet för att ändra hur post”bubblorna”ser ut för varje användare.
+Dessa funktioner skulle få användare att lägga mer tid på att skapa en egen identitet på hemsidan, vilken skulle också få användaren att spendera mer tid på Chatter.
+
+Summering 
+Arbetet började långsamt då det tog längre tid att sätta upp och konfigurera databaserna   än förväntat. Efter första veckan trappades produktivitet upp betydligt.
+De grundläggande kraven blev klara efter två och en halv vecka, och den efterfrågade extra funktionalitet blev nästan klar efter 3 veckor.
+Användargränssnittet blev bättre än förväntat, sidan känns som en SPA med trevliga knappar och ikoner som binder upplevelsen väl.

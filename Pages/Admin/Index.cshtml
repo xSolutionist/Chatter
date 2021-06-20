@@ -1,0 +1,131 @@
+﻿@page
+@model AnvDemo2.Pages.Admin.IndexModel
+@{
+}
+
+
+<a href="?Roleadmin=true" class="btn btn-outline-light btn-block"> Role Admin </a>
+<a href="?Postoverview=true" class="btn btn-outline-light btn-block"> Post Overview </a>
+<a href="?Threadadmin=true" class="btn btn-outline-light btn-block"> Thread Admin  </a>
+<a href="https://chatterapi20210607171734.azurewebsites.net/api/post" class="btn btn-outline-light btn-block"> Get Posts API  </a>
+
+
+@if (Model.RoleAdmin == true)
+{
+    <div class="card text-center">
+        <h5>Role Administration: </h5>
+
+        <table class="table-light table-bordered ">
+            <tr>
+                <th>Email</th>
+
+                <th> Profile Picture </th>
+                <th> Chatter Name</th>
+                @foreach (var role in Model.Roles)
+                {
+
+                    <th>@role.Name</th>
+                }
+            </tr>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td> <p class="text-dark"> @user.UserName </p></td>
+                    <td> <img src="~/img/@user.Avatar" class="rounded" width="25" /> </td>
+                    <td><p class="text-success"> @user.ChatterName </p> </td>
+
+                    @foreach (var role in Model.Roles)
+                    {
+                        if (await Model._userManager.IsInRoleAsync(user, role.Name))
+                        {
+                            <td> <a href="?RemoveUserId=@user.Id&Role=@role.Name" class="btn btn-success">YES</a></td>
+                        }
+                        else
+                        {
+                            <td><a href="?AddUserId=@user.Id&Role=@role.Name" class="btn btn-danger">NO</a></td>
+                        }
+                    }
+
+                </tr>
+            }
+        </table>
+        <div>
+            <br />
+            Accessable roles:
+            <hr />
+            <p>
+                @foreach (var role in Model.Roles)
+                {
+                    @role.Name; <hr />
+                }
+            </p>
+        </div>
+        <form method="post">
+            <label for="RoleName">New Role</label>
+            <input name="RoleName" />
+            <input type="submit" class="btn-dark" value="Create Roll" />
+        </form>
+    </div>
+}
+
+@if (Model.ThreadAdmin == true)
+{
+    <div class="card text-center">
+        <hr />
+        <h5>Create Thread / Sub-Thread </h5>
+        <div>
+
+            <form method="post">
+
+                <label for="Content"> Initial Content</label><br />
+                <textarea name="content" class="form-group" rows="2"> </textarea> <br />
+
+                <label for="Thread">Thread</label><br />
+                <input name="thread" /><br />
+
+                <label for="Subthread">SubThread</label> <br />
+                <input name="SubThread" /> <br />
+                <small id="threadhelp" class="form-text text-muted">To create a subthread within a thread. Enter Thread name under "Thread"</small>
+
+                <input type="submit" class="btn btn-success" value="Create" />
+            </form>
+        </div>
+    </div>
+}
+
+@if (Model.PostOverview == true)
+{
+    <div class="card text-center">
+        <hr />
+
+        <h5>Reported Posts </h5>
+
+        @if (Model.Posts != null)
+        {
+            @foreach (var item in Model.Posts.Where(x => x.IsFlagged == true))
+            {
+                <div class="card mb-2">
+                    <div class="card-body p-2 p-sm-3">
+                        <div class="media forum-item">
+                            <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="/img/@item.UserImage" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                            <div class="media-body">
+                                <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">Forum Post</a></h6>
+                                <p class="text-secondary">
+                                    @item.Content
+                                </p>
+                                <p class="text-muted"><a href="javascript:void(0)"> @item.Author</a> replied <span class="text-secondary font-weight-bold">@item.Created</span></p>
+                                <a href="?deleteid=@item.Id" class="btn btn-secondary"> Delete </a>
+                            </div>
+                            <div class="text-muted small text-center align-self-center">
+                                <span class="d-none d-sm-inline-block"><i class="far fa-eye"></i> 19</span>
+                                <span><i class="far fa-comment ml-2"></i> 3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        }
+    </div>
+}
+

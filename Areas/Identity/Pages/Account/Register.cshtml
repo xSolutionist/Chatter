@@ -1,0 +1,52 @@
+﻿@page
+@model RegisterModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Register";
+}
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link href="/css/login.css" rel="stylesheet">
+
+
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <!-- Icon -->
+        <div class="fadeIn first">
+            <img src="/img/account.png" id="icon" alt="User Icon" />
+            <h1>Chatter</h1>
+        </div>
+
+        <!-- Login Form -->
+        <form id="account" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="form-group"></div>
+            <input asp-for="Input.Email" type="text" id="login" class="fadeIn second" placeholder="Email">
+            <input asp-for="Input.ChatterName" type="text" id="password" class="fadeIn third" placeholder="ChatterName">
+            <input asp-for="Input.Password" type="text" id="password" class="fadeIn third" placeholder="Password">
+            <input asp-for="Input.ConfirmPassword" type="text" id="password" class="fadeIn third" placeholder="Confirm Password">
+            <div class="form-group">
+                <label asp-for="Input.Avatar"> Avatar </label>
+                <input type="file" name="file" />
+            </div>
+
+            <input type="submit" class="fadeIn fourth" value="Register">
+        </form>
+
+        <!-- Remind Passowrd -->
+        <div id="formFooter">
+            <a class="underlineHover" href="https://localhost:44325/">Go to the Site</a>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

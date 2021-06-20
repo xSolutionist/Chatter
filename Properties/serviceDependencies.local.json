@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "type": "mssql.local",
+      "connectionId": "ChatterContextConnection"
+    },
+    "mssql2": {
+      "type": "mssql.local",
+      "connectionId": "ChatterThreadContext"
+    },
+    "mssql3": {
+      "type": "mssql.local",
+      "connectionId": "ChatterPostContext"
+    },
+    "mssql4": {
+      "type": "mssql.local",
+      "connectionId": "ChatterMessageContext"
+    }
+  }
+}

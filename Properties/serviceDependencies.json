@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "ChatterThreadContext"
+    },
+    "mssql3": {
+      "type": "mssql",
+      "connectionId": "ChatterPostContext"
+    },
+    "mssql4": {
+      "type": "mssql",
+      "connectionId": "ChatterMessageContext"
+    },
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "ChatterContextConnection"
+    }
+  }
+}
