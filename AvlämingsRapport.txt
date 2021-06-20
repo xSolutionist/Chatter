@@ -6,7 +6,7 @@ Applikationens syfte är att möjliggöra kommunikation i form av ett forum, var
 administratör. Användarna ska ha tillgång till en skräddarsydd profil.
 
 Tidsöversikt 
-Jag har utvecklat projektet under 4 veckor. Från 17-maj till 17-Augusti.
+Jag har utvecklat projektet under 4 veckor. Från 17-maj till 17-Juni.
 
 Tekniska krav 
 Byggt på windows med .NET core 5. Går att vidareutveckla på alla plattformar.
